@@ -1,0 +1,6 @@
+build/
+Makefile
+dist/
+funclist
+nbproject/
+*.swp
