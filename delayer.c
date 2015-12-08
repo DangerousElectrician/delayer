@@ -17,7 +17,7 @@ unsigned char flag = 0;
 
 void interrupt IntServe(void) {
     if (TMR0IF) {
-        TMR0 = -39062;
+        TMR0 = -11719;
         flag = 1;
         TMR0IF = 0;
     }
