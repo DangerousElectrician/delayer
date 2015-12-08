@@ -30,6 +30,8 @@ void A2D_Init(void) {
     ADCON0 = 0x01;
 }
 
+unsigned char buffer[3700];
+
 void main(void) {
 
     // Initialize Timer1.  When Timer1 = 0, set RC2.
