@@ -3,7 +3,7 @@
  * 12.33 kHz sample freq
  * 3968 bytes sram total
  * 3700 byte buffer
- * 300 ms delay
+ * 200 ms delay
  * 
  * quantitization 256 levels
  * 
@@ -17,7 +17,7 @@ unsigned char flag = 0;
 
 void interrupt IntServe(void) {
     if (TMR0IF) {
-        TMR0 = -811;
+        TMR0 = -280;
         flag = 1;
         TMR0IF = 0;
     }
@@ -53,7 +53,7 @@ void main(void) {
     TMR0IP = 1;
     PEIE = 1;
 
-    TMR0 = -811; //81 us period
+    TMR0 = -280; //54 us period
     GIE = 1;
     
     TRISD = 0; //port d output
@@ -61,7 +61,7 @@ void main(void) {
     A2D_Init();
     unsigned long raw = 0;
     int inputi = 0;
-    int outputi = 1;
+    int outputi = 0;
     int scaled = 0;
     while (1) {
         PORTD = buffer[outputi];
