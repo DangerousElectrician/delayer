@@ -3,7 +3,7 @@
  * 12.33 kHz sample freq
  * 3968 bytes sram total
  * 3700 byte buffer
- * 200 ms delay
+ * 200 ms delay within 5%
  * 
  * quantitization 256 levels
  * 
@@ -17,7 +17,7 @@ unsigned char flag = 0;
 
 void interrupt IntServe(void) {
     if (TMR0IF) {
-        TMR0 = -280;
+        TMR0 = -540;
         flag = 1;
         TMR0IF = 0;
     }
@@ -53,7 +53,7 @@ void main(void) {
     TMR0IP = 1;
     PEIE = 1;
 
-    TMR0 = -280; //54 us period
+    TMR0 = -540; //54 us period
     GIE = 1;
     
     TRISD = 0; //port d output
@@ -71,8 +71,8 @@ void main(void) {
         scaled = raw - 410; //input into buffer goes here
         buffer[inputi] = (unsigned char) scaled;
         
-        inputi = (inputi+1)%3700;
-        outputi = (outputi+1)%3700;
+        if(inputi++ >= 3700) inputi = 0;
+        if(outputi++ >= 3700) outputi = 0;
         
         flag = 0;
         while(flag ==0);
