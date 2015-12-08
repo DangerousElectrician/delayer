@@ -53,7 +53,7 @@ void main(void) {
     TMR0IP = 1;
     PEIE = 1;
 
-    TMR0 = -39062; //1 second period
+    TMR0 = -11719; //300 millisecond period
     GIE = 1;
 
     A2D_Init();
