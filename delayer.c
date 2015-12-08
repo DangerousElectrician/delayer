@@ -17,7 +17,7 @@ unsigned char flag = 0;
 
 void interrupt IntServe(void) {
     if (TMR0IF) {
-        TMR0 = -11719;
+        TMR0 = -811;
         flag = 1;
         TMR0IF = 0;
     }
@@ -47,25 +47,29 @@ void main(void) {
 
     // Initialize Timer1
     T0CS = 0;
-    T0CON = 0x87; //PS=256
+    T0CON = 0x88; //PS=1
     TMR0ON = 1;
     TMR0IE = 1;
     TMR0IP = 1;
     PEIE = 1;
 
-    TMR0 = -11719; //300 millisecond period
+    TMR0 = -811; //81 us period
     GIE = 1;
+    
+    TRISD = 0; //port d output
 
     A2D_Init();
     unsigned long raw = 0;
     int inputi = 0;
     int outputi = 1;
+    int scaled = 0;
     while (1) {
+        PORTD = buffer[outputi];
+        
         raw = A2D_Read(0);
         
-        int input = 0; //input into buffer goes here
-        buffer[inputi] = input;
-        PORTD = buffer[outputi];
+        scaled = raw - 410; //input into buffer goes here
+        buffer[inputi] = (unsigned char) scaled;
         
         inputi = (inputi+1)%3700;
         outputi = (outputi+1)%3700;
