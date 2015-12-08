@@ -58,8 +58,20 @@ void main(void) {
 
     A2D_Init();
     unsigned long raw = 0;
+    int inputi = 0;
+    int outputi = 1;
     while (1) {
         raw = A2D_Read(0);
+        
+        int input = 0; //input into buffer goes here
+        buffer[inputi] = input;
+        PORTD = buffer[outputi];
+        
+        inputi = (inputi+1)%3700;
+        outputi = (outputi+1)%3700;
+        
+        flag = 0;
+        while(flag ==0);
 
     }
 }
