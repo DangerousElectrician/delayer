@@ -1,4 +1,15 @@
 //delay analog input signal by at least 200 ms and output to resistor ladder DAC
+/*
+ * 12.33 kHz sample freq
+ * 3968 bytes sram total
+ * 3700 byte buffer
+ * 300 ms delay
+ * 
+ * quantitization 256 levels
+ * 
+ * 10 bit reading from ADC scaled to 256
+ * 
+*/
 
 #include <pic18.h>
 
@@ -30,11 +41,11 @@ void A2D_Init(void) {
     ADCON0 = 0x01;
 }
 
-unsigned char buffer[3700];
+unsigned char buffer[3700] = {0}; //initialize all to 0
 
 void main(void) {
 
-    // Initialize Timer1.  When Timer1 = 0, set RC2.
+    // Initialize Timer1
     T0CS = 0;
     T0CON = 0x87; //PS=256
     TMR0ON = 1;
@@ -42,7 +53,7 @@ void main(void) {
     TMR0IP = 1;
     PEIE = 1;
 
-    TMR0 = -39062; //TMR1 = -5000;  //for 20 Hz
+    TMR0 = -39062; //1 second period
     GIE = 1;
 
     A2D_Init();
