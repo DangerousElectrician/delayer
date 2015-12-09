@@ -59,7 +59,7 @@ void main(void) {
     TRISD = 0; //port d output
 
     A2D_Init();
-    unsigned long raw = 0;
+    int raw = 0;
     int inputi = 0;
     int outputi = 0;
     int scaled = 0;
@@ -71,8 +71,8 @@ void main(void) {
         scaled = raw - 410; //input into buffer goes here
         buffer[inputi] = (unsigned char) scaled;
         
-        if(inputi++ >= 3700) inputi = 0;
-        if(outputi++ >= 3700) outputi = 0;
+        if(inputi++ >= 3699) inputi = 0;
+        if(outputi++ >= 3699) outputi = 0;
         
         flag = 0;
         while(flag ==0);
