@@ -1,6 +1,6 @@
 //delay analog input signal by at least 200 ms and output to resistor ladder DAC
 /*
- * 12.33 kHz sample freq
+ * 18.5 kHz sample freq
  * 3968 bytes sram total
  * 3700 byte buffer
  * 200 ms delay within 5%
@@ -11,6 +11,7 @@
  *
 */
 
+#define OFFSET 657 //577 //657
 #include <pic18.h>
 
 unsigned char flag = 0;
@@ -20,7 +21,7 @@ int outputi = 0;
 
 void interrupt IntServe(void) {
     if (TMR0IF) {
-        TMR0 = -540;
+        TMR0 = -500;
         flag = 1;
         TMR0IF = 0;
     }
@@ -55,7 +56,7 @@ void A2D_Init(void) {
     ADCON0 = 0x01;
 }
 
-unsigned char buffer[3700] = {0}; //initialize all to 0
+unsigned char buffer[3939] = {0}; //initialize all to 0
 
 void main(void) {
 
@@ -73,7 +74,7 @@ void main(void) {
     TRISB0 =1;
     TRISC = 0x00;
 
-    TMR0 = -540; //54 us period
+    TMR0 = -500; //54 us period
     GIE = 1;
 
     TRISD = 0; //port d output
@@ -83,21 +84,16 @@ void main(void) {
     int scaled = 0;
     while (1) {
 
-//        if (buffer[outputi] > 25)
-            PORTD = buffer[outputi];
-//        else PORTD = 127;
-
+        PORTD = buffer[outputi];
 
         raw = A2D_Read(0);
 
-//        if (raw<= 707 && raw>=442) scaled = raw - 442; //input into buffer goes here
-//        else if ( raw >= 707) scaled = 255;
-//        else scaled = 128;
-
-        if (raw >= 705) raw = 705;
-        if (raw <= 450) raw = 450;
-
-        scaled = raw - 450;
+//        if (raw > (OFFSET+127)) raw = OFFSET+127; //657
+//        if (raw < (OFFSET-128)) raw = OFFSET-128;
+//        scaled = raw - OFFSET - 128;
+        if (raw > (OFFSET+127)) scaled = 255; //657
+        else if (raw < (OFFSET-128)) scaled = 0;
+        else scaled = raw - OFFSET - 128;
 
         buffer[inputi] = (unsigned char) scaled;
 
@@ -106,6 +102,5 @@ void main(void) {
 
         flag = 0;
         while(flag ==0);
-
     }
 }
