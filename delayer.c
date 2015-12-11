@@ -88,9 +88,6 @@ void main(void) {
 
         raw = A2D_Read(0);
 
-//        if (raw > (OFFSET+127)) raw = OFFSET+127; //657
-//        if (raw < (OFFSET-128)) raw = OFFSET-128;
-//        scaled = raw - OFFSET - 128;
         if (raw > (OFFSET+127)) scaled = 255; //657
         else if (raw < (OFFSET-128)) scaled = 0;
         else scaled = raw - OFFSET - 128;
